@@ -3,3 +3,5 @@
 .env.example
 node_modules/
 guesbook-prefooter.js
+test/
+limun-admin-guestbook.zip

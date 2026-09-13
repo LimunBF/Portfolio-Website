@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <meta name="theme-color" content="#1f1b2d">
+
+  <title>LIMUN Admin — Guestbook Moderation</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  >
+
+  <link rel="stylesheet" href="./admin.css">
+</head>
+
+<body>
+  <a class="skip-link" href="#admin-main">Skip to content</a>
+
+  <header class="admin-topbar">
+    <a class="admin-brand" href="../" aria-label="Back to Limun portfolio">
+      <span class="admin-brand-mark">L</span>
+      <span>
+        <strong>LIMUN</strong>
+        <small>ADMIN</small>
+      </span>
+    </a>
+
+    <div class="admin-topbar-actions">
+      <a class="admin-portfolio-link" href="../" target="_blank" rel="noopener">
+        Open portfolio
+        <span aria-hidden="true">↗</span>
+      </a>
+
+      <div class="admin-user-menu" id="admin-user-menu" hidden>
+        <div class="admin-user-copy">
+          <small>Signed in as</small>
+          <strong id="admin-user-email">—</strong>
+        </div>
+
+        <button class="admin-signout" id="admin-signout" type="button">
+          Sign out
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="admin-main">
+    <!-- LOGIN -->
+    <section class="admin-login-view" id="admin-login-view">
+      <div class="admin-login-glow admin-login-glow-a" aria-hidden="true"></div>
+      <div class="admin-login-glow admin-login-glow-b" aria-hidden="true"></div>
+
+      <div class="admin-login-card">
+        <div class="admin-login-sticker" aria-hidden="true">✦</div>
+
+        <p class="admin-eyebrow">PRIVATE CONTROL PANEL</p>
+        <h1>Guestbook<br>Moderation.</h1>
+
+        <p class="admin-login-lead">
+          Approve, reject, or remove notes left on your portfolio.
+          Access is protected by Firebase Authentication and a server-side admin allowlist.
+        </p>
+
+        <button class="admin-google-button" id="admin-google-login" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M21.6 12.23c0-.71-.06-1.4-.18-2.07H12v3.92h5.38a4.6 4.6 0 0 1-2 3.02v2.51h3.24c1.9-1.75 2.98-4.33 2.98-7.38Z"></path>
+            <path d="M12 22c2.7 0 4.97-.9 6.62-2.39l-3.24-2.51c-.9.6-2.04.96-3.38.96-2.61 0-4.82-1.76-5.61-4.13H3.05v2.59A10 10 0 0 0 12 22Z"></path>
+            <path d="M6.39 13.93A6.02 6.02 0 0 1 6.07 12c0-.67.12-1.32.32-1.93V7.48H3.05A10 10 0 0 0 2 12c0 1.61.39 3.13 1.05 4.52l3.34-2.59Z"></path>
+            <path d="M12 5.94c1.47 0 2.79.5 3.83 1.49l2.87-2.87A9.62 9.62 0 0 0 12 2a10 10 0 0 0-8.95 5.48l3.34 2.59C7.18 7.7 9.39 5.94 12 5.94Z"></path>
+          </svg>
+          <span>Sign in with Google</span>
+        </button>
+
+        <p class="admin-login-status" id="admin-login-status" role="status" aria-live="polite"></p>
+
+        <div class="admin-login-foot">
+          <span>Firebase Auth</span>
+          <span>Vercel Functions</span>
+          <span>Firestore</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section class="admin-dashboard" id="admin-dashboard" hidden>
+      <div class="admin-shell">
+        <div class="admin-page-heading">
+          <div>
+            <p class="admin-eyebrow">GUESTBOOK CONTROL</p>
+            <h1>Moderation Queue</h1>
+            <p>
+              Review notes before they appear publicly on your portfolio.
+            </p>
+          </div>
+
+          <button class="admin-refresh-button" id="admin-refresh" type="button">
+            <span aria-hidden="true">↻</span>
+            Refresh
+          </button>
+        </div>
+
+        <section class="admin-security-card" id="admin-security-card">
+          <div class="admin-security-icon" aria-hidden="true">✓</div>
+
+          <div class="admin-security-copy">
+            <strong id="admin-security-title">Admin verified</strong>
+            <p id="admin-security-copy">
+              Authentication status is loading.
+            </p>
+          </div>
+
+          <button class="admin-copy-uid" id="admin-copy-uid" type="button">
+            Copy UID
+          </button>
+        </section>
+
+        <section class="admin-stats" aria-label="Guestbook statistics">
+          <article class="admin-stat admin-stat-yellow">
+            <span>Pending</span>
+            <strong id="stat-pending">0</strong>
+            <small>Needs review</small>
+          </article>
+
+          <article class="admin-stat admin-stat-aqua">
+            <span>Approved</span>
+            <strong id="stat-approved">0</strong>
+            <small>Visible publicly</small>
+          </article>
+
+          <article class="admin-stat admin-stat-pink">
+            <span>Rejected</span>
+            <strong id="stat-rejected">0</strong>
+            <small>Hidden from public</small>
+          </article>
+        </section>
+
+        <section class="admin-workspace">
+          <div class="admin-toolbar">
+            <div class="admin-tabs" role="tablist" aria-label="Filter notes">
+              <button class="admin-tab is-active" data-status-filter="pending" type="button">
+                Pending
+                <span id="tab-count-pending">0</span>
+              </button>
+
+              <button class="admin-tab" data-status-filter="approved" type="button">
+                Approved
+                <span id="tab-count-approved">0</span>
+              </button>
+
+              <button class="admin-tab" data-status-filter="rejected" type="button">
+                Rejected
+                <span id="tab-count-rejected">0</span>
+              </button>
+
+              <button class="admin-tab" data-status-filter="all" type="button">
+                All
+                <span id="tab-count-all">0</span>
+              </button>
+            </div>
+
+            <label class="admin-search">
+              <span class="sr-only">Search notes</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="11" cy="11" r="7"></circle>
+                <path d="m20 20-3.5-3.5"></path>
+              </svg>
+              <input
+                id="admin-search"
+                type="search"
+                placeholder="Search name or message..."
+                autocomplete="off"
+              >
+            </label>
+          </div>
+
+          <div class="admin-list-meta">
+            <p id="admin-list-label">Pending notes</p>
+            <span id="admin-list-count">0 results</span>
+          </div>
+
+          <div class="admin-note-list" id="admin-note-list" aria-live="polite"></div>
+        </section>
+
+        <footer class="admin-footer">
+          <span>LIMUN Admin</span>
+          <span>Guestbook moderation dashboard</span>
+        </footer>
+      </div>
+    </section>
+  </main>
+
+  <dialog class="admin-delete-dialog" id="admin-delete-dialog">
+    <form method="dialog">
+      <span class="admin-dialog-mark" aria-hidden="true">!</span>
+      <p class="admin-eyebrow">DELETE NOTE</p>
+      <h2>Delete this note permanently?</h2>
+      <p>
+        This cannot be undone. Use Reject instead if you only want to keep the note hidden.
+      </p>
+
+      <div class="admin-dialog-actions">
+        <button value="cancel" class="admin-dialog-cancel">Cancel</button>
+        <button value="delete" class="admin-dialog-delete">Delete permanently</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="admin-toast" id="admin-toast" role="status" aria-live="polite"></div>
+
+  <script src="./firebase-config.js"></script>
+  <script type="module" src="./admin.js"></script>
+</body>
+</html>

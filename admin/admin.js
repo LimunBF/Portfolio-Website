@@ -398,24 +398,131 @@ async function handleSignout() {
 async function handleSignedIn(user) {
   currentUser = user;
 
-  setLoginStatus("");
+  loginButton.disabled = true;
 
-  if (userEmail) {
-    userEmail.textContent =
-      user.email || "Google account";
+  setLoginStatus(
+    "Verifying admin access..."
+  );
+
+
+  try {
+
+    const token =
+      await user.getIdToken(
+        true
+      );
+
+
+    const response =
+      await fetch(
+        "/api/admin/session",
+        {
+          headers: {
+            Accept:
+              "application/json",
+
+            Authorization:
+              `Bearer ${token}`
+          },
+
+          cache:
+            "no-store"
+        }
+      );
+
+
+    const data =
+      await response.json();
+
+
+    /* NOT AUTHORIZED */
+
+    if (
+      !response.ok ||
+      data.authorized !== true
+    ) {
+
+      await signOut(auth);
+
+
+      dashboard.hidden =
+        true;
+
+      loginView.hidden =
+        false;
+
+
+      setLoginStatus(
+        data.message ||
+        "This Google account is not authorized."
+      );
+
+
+      return;
+    }
+
+
+    /* AUTHORIZED */
+
+    adminInfo =
+      data.admin;
+
+
+    if (userEmail) {
+      userEmail.textContent =
+        adminInfo.email ||
+        user.email ||
+        "Admin";
+    }
+
+
+    if (userMenu) {
+      userMenu.hidden =
+        false;
+    }
+
+
+    updateSecurityCard();
+
+
+    loginView.hidden =
+      true;
+
+    dashboard.hidden =
+      false;
+
+
+    setLoginStatus("");
+
+
+    await loadNotes();
+
+
+  } catch (error) {
+
+    console.error(
+      "Admin session verification:",
+      error
+    );
+
+
+    dashboard.hidden =
+      true;
+
+    loginView.hidden =
+      false;
+
+
+    setLoginStatus(
+      "Could not verify admin access."
+    );
+
+
+  } finally {
+
+    loginButton.disabled =
+      false;
   }
-
-  if (userMenu) {
-    userMenu.hidden = false;
-  }
-
-  loginView.hidden =
-    true;
-
-  dashboard.hidden =
-    false;
-
-  await loadNotes();
 }
 
 
@@ -590,21 +697,24 @@ async function deleteNote(id) {
    ========================================================= */
 
 function updateSecurityCard() {
-  if (!adminInfo) return;
+  if (!adminInfo) {
+    return;
+  }
 
-  const mode =
-    adminInfo.authorizationMode === "uid"
-      ? "UID allowlist"
-      : "verified email allowlist";
 
   securityTitle.textContent =
     "Admin verified";
 
+
   securityCopy.textContent =
-    `Authenticated as ${adminInfo.email || "admin"} · protected by ${mode}.`;
+    `Authenticated as ${
+      adminInfo.email || "admin"
+    }`;
+
 
   copyUidButton.dataset.uid =
     adminInfo.uid || "";
+
 
   copyUidButton.hidden =
     !adminInfo.uid;

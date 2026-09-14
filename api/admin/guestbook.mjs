@@ -12,7 +12,7 @@ import {
 } from "../../lib/admin-auth.mjs";
 
 
-const MAX_ADMIN_NOTES = 200;
+const MAX_NOTES = 200;
 
 const VALID_ID =
   /^[A-Za-z0-9_-]{8,120}$/;
@@ -20,8 +20,7 @@ const VALID_ID =
 
 function json(
   data,
-  status = 200,
-  extraHeaders = {}
+  status = 200
 ) {
   return Response.json(
     data,
@@ -30,12 +29,10 @@ function json(
 
       headers: {
         "Cache-Control":
-          "no-store, max-age=0",
+          "no-store",
 
         "X-Content-Type-Options":
-          "nosniff",
-
-        ...extraHeaders
+          "nosniff"
       }
     }
   );
@@ -49,25 +46,7 @@ function clean(value) {
 }
 
 
-function sameOrigin(request) {
-  const url =
-    new URL(request.url);
-
-  const origin =
-    request.headers.get(
-      "origin"
-    );
-
-  return Boolean(
-    origin &&
-    origin === url.origin
-  );
-}
-
-
-function serializeTimestamp(
-  value
-) {
+function serializeTimestamp(value) {
   return value
     ?.toDate?.()
     ?.toISOString?.()
@@ -76,6 +55,10 @@ function serializeTimestamp(
 
 
 function normalizeStatus(data) {
+  if (data.status === "rejected") {
+    return "rejected";
+  }
+
   if (
     data.status === "approved" ||
     data.approved === true
@@ -83,76 +66,63 @@ function normalizeStatus(data) {
     return "approved";
   }
 
-  if (
-    data.status === "rejected"
-  ) {
-    return "rejected";
-  }
-
   return "pending";
 }
 
 
-async function listNotes() {
-  const db =
-    getDb();
+/* =========================================================
+   READ ALL NOTES
+   ========================================================= */
 
-  /*
-    Only one ordered field is used here,
-    so this does not require the public
-    guestbook composite index.
-  */
+async function getAllNotes() {
+  const db = getDb();
+
   const snapshot =
     await db
-      .collection(
-        "guestbook_notes"
-      )
-      .orderBy(
-        "createdAt",
-        "desc"
-      )
-      .limit(
-        MAX_ADMIN_NOTES
-      )
+      .collection("guestbook_notes")
+      .orderBy("createdAt", "desc")
+      .limit(MAX_NOTES)
       .get();
 
 
-  return snapshot.docs.map(
-    document => {
-      const data =
-        document.data();
+  return snapshot.docs.map(document => {
+    const data =
+      document.data();
 
-      return {
-        id:
-          document.id,
+    return {
+      id:
+        document.id,
 
-        name:
-          clean(data.name) ||
-          "Anonymous",
+      name:
+        clean(data.name) ||
+        "Anonymous",
 
-        message:
-          clean(data.message),
+      message:
+        clean(data.message),
 
-        approved:
-          data.approved === true,
+      approved:
+        data.approved === true,
 
-        status:
-          normalizeStatus(data),
+      status:
+        normalizeStatus(data),
 
-        createdAt:
-          serializeTimestamp(
-            data.createdAt
-          ),
+      createdAt:
+        serializeTimestamp(
+          data.createdAt
+        ),
 
-        moderatedAt:
-          serializeTimestamp(
-            data.moderatedAt
-          )
-      };
-    }
-  );
+      moderatedAt:
+        serializeTimestamp(
+          data.moderatedAt
+        )
+    };
+  });
 }
 
+
+/* =========================================================
+   BODY
+   ========================================================= */
 
 async function readJson(request) {
   const contentType =
@@ -167,7 +137,7 @@ async function readJson(request) {
   ) {
     throw Object.assign(
       new Error(
-        "Invalid request format."
+        "Request must be JSON."
       ),
       {
         status: 415
@@ -191,16 +161,14 @@ async function readJson(request) {
 }
 
 
-function requireValidId(value) {
+function validateId(value) {
   const id =
     clean(value);
 
-  if (
-    !VALID_ID.test(id)
-  ) {
+  if (!VALID_ID.test(id)) {
     throw Object.assign(
       new Error(
-        "Invalid note identifier."
+        "Invalid note ID."
       ),
       {
         status: 400
@@ -212,11 +180,15 @@ function requireValidId(value) {
 }
 
 
-async function updateNote({
+/* =========================================================
+   UPDATE NOTE
+   ========================================================= */
+
+async function moderateNote(
   id,
   action,
   admin
-}) {
+) {
   const db =
     getDb();
 
@@ -230,6 +202,7 @@ async function updateNote({
 
   const snapshot =
     await ref.get();
+
 
   if (!snapshot.exists) {
     throw Object.assign(
@@ -243,7 +216,7 @@ async function updateNote({
   }
 
 
-  const updates = {
+  const update = {
     moderatedAt:
       FieldValue.serverTimestamp(),
 
@@ -255,32 +228,17 @@ async function updateNote({
   };
 
 
-  if (
-    action === "approve"
-  ) {
-    updates.approved =
-      true;
+  if (action === "approve") {
+    update.approved = true;
+    update.status = "approved";
 
-    updates.status =
-      "approved";
+  } else if (action === "reject") {
+    update.approved = false;
+    update.status = "rejected";
 
-  } else if (
-    action === "reject"
-  ) {
-    updates.approved =
-      false;
-
-    updates.status =
-      "rejected";
-
-  } else if (
-    action === "pending"
-  ) {
-    updates.approved =
-      false;
-
-    updates.status =
-      "pending";
+  } else if (action === "pending") {
+    update.approved = false;
+    update.status = "pending";
 
   } else {
     throw Object.assign(
@@ -294,19 +252,15 @@ async function updateNote({
   }
 
 
-  await ref.update(
-    updates
-  );
-
-
-  return {
-    id,
-    action
-  };
+  await ref.update(update);
 }
 
 
-async function removeNote(id) {
+/* =========================================================
+   DELETE
+   ========================================================= */
+
+async function deleteNote(id) {
   const db =
     getDb();
 
@@ -320,6 +274,7 @@ async function removeNote(id) {
 
   const snapshot =
     await ref.get();
+
 
   if (!snapshot.exists) {
     throw Object.assign(
@@ -337,27 +292,17 @@ async function removeNote(id) {
 }
 
 
+/* =========================================================
+   API
+   ========================================================= */
+
 export default {
   async fetch(request) {
-    /*
-      This endpoint is only meant for
-      the same site's admin page.
-    */
-    if (
-      !sameOrigin(request)
-    ) {
-      return json(
-        {
-          ok: false,
-          message:
-            "Invalid request origin."
-        },
-        403
-      );
-    }
-
 
     let admin;
+
+
+    /* AUTHORIZATION */
 
     try {
       admin =
@@ -366,6 +311,7 @@ export default {
         );
 
     } catch (error) {
+
       if (
         error instanceof
         AdminAuthError
@@ -380,16 +326,18 @@ export default {
         );
       }
 
+
       console.error(
         "Admin auth error:",
         error
       );
 
+
       return json(
         {
           ok: false,
           message:
-            "Could not verify admin access."
+            "Could not verify admin."
         },
         500
       );
@@ -397,12 +345,15 @@ export default {
 
 
     try {
+
+      /* GET ALL */
+
       if (
-        request.method ===
-        "GET"
+        request.method === "GET"
       ) {
         const notes =
-          await listNotes();
+          await getAllNotes();
+
 
         return json({
           ok: true,
@@ -411,63 +362,69 @@ export default {
 
           notes,
 
-          truncated:
-            notes.length >=
-            MAX_ADMIN_NOTES
+          count:
+            notes.length
         });
       }
 
 
+      /* MODERATE */
+
       if (
-        request.method ===
-        "PATCH"
+        request.method === "PATCH"
       ) {
         const body =
           await readJson(
             request
           );
 
+
         const id =
-          requireValidId(
+          validateId(
             body.id
           );
+
 
         const action =
           clean(
             body.action
           );
 
-        const result =
-          await updateNote({
-            id,
-            action,
-            admin
-          });
+
+        await moderateNote(
+          id,
+          action,
+          admin
+        );
+
 
         return json({
           ok: true,
-          ...result
+          id,
+          action
         });
       }
 
 
+      /* DELETE */
+
       if (
-        request.method ===
-        "DELETE"
+        request.method === "DELETE"
       ) {
         const body =
           await readJson(
             request
           );
 
+
         const id =
-          requireValidId(
+          validateId(
             body.id
           );
 
-        await removeNote(
-          id
-        );
+
+        await deleteNote(id);
+
 
         return json({
           ok: true,
@@ -482,19 +439,17 @@ export default {
           message:
             "Method not allowed."
         },
-        405,
-        {
-          Allow:
-            "GET, PATCH, DELETE"
-        }
+        405
       );
 
 
     } catch (error) {
+
       console.error(
         "Admin guestbook error:",
         error
       );
+
 
       return json(
         {
@@ -502,11 +457,9 @@ export default {
 
           message:
             error?.message ||
-            "Admin guestbook request failed."
+            "Guestbook admin request failed."
         },
-        Number(
-          error?.status
-        ) || 500
+        error?.status || 500
       );
     }
   }

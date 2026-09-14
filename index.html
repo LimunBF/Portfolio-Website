@@ -4,19 +4,51 @@
   <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <meta content="Portfolio of Lintang Mukti Nugroho — Web Development, Machine Learning, Computer Vision, and NLP." name="description"/>
-    <meta content="#f6f3ed" name="theme-color"/>
-    <title>
-      Limun | Lintang Mukti Nugroho — Portfolio
-    </title>
+    <meta content="Portfolio of Lintang Mukti Nugroho (Limun), featuring web development, machine learning, computer vision, NLP, and software projects." name="description"/>
+    <meta content="Lintang Mukti Nugroho" name="author"/>
+    <meta content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" name="robots"/>
+    <meta content="#fff8ef" name="theme-color"/>
+    <meta content="light" name="color-scheme"/>
+    <title>Lintang Mukti Nugroho (Limun) | Web Developer &amp; AI Portfolio</title>
+
+    <link href="https://limun-portfolio-website.vercel.app/" rel="canonical"/>
     <link href="./images/logo_bagus.png" rel="icon" type="image/png"/>
+    <link href="./images/logo_bagus.png" rel="apple-touch-icon"/>
+    <link as="image" fetchpriority="high" href="./images/logo_bagus.png" rel="preload"/>
+
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="Limun Portfolio"/>
+    <meta property="og:locale" content="en_US"/>
+    <meta property="og:title" content="Lintang Mukti Nugroho (Limun) | Web Developer &amp; AI Portfolio"/>
+    <meta property="og:description" content="Explore Lintang Mukti Nugroho's projects in web development, machine learning, computer vision, NLP, and software engineering."/>
+    <meta property="og:url" content="https://limun-portfolio-website.vercel.app/"/>
+    <meta property="og:image" content="https://limun-portfolio-website.vercel.app/assets/img/og-cover.png"/>
+    <meta property="og:image:secure_url" content="https://limun-portfolio-website.vercel.app/assets/img/og-cover.png"/>
+    <meta property="og:image:type" content="image/png"/>
+    <meta property="og:image:width" content="1200"/>
+    <meta property="og:image:height" content="630"/>
+    <meta property="og:image:alt" content="Limun portfolio cover for Lintang Mukti Nugroho"/>
+
+    <meta name="twitter:card" content="summary_large_image"/>
+    <meta name="twitter:title" content="Lintang Mukti Nugroho (Limun) | Web Developer &amp; AI Portfolio"/>
+    <meta name="twitter:description" content="Web development, machine learning, computer vision, NLP, and software projects by Lintang Mukti Nugroho."/>
+    <meta name="twitter:image" content="https://limun-portfolio-website.vercel.app/assets/img/og-cover.png"/>
+    <meta name="twitter:image:alt" content="Limun portfolio cover for Lintang Mukti Nugroho"/>
     <link href="https://fonts.googleapis.com" rel="preconnect"/>
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+    <link href="https://cdn.jsdelivr.net" rel="preconnect"/>
+    <link href="https://cdn.simpleicons.org" rel="preconnect"/>
+    <link href="https://unpkg.com" rel="preconnect"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link href="./css/style.css" rel="stylesheet"/><link href="./css/contact.css" rel="stylesheet"/><link href="./css/guestbook.css" rel="stylesheet"/>
-    </link>
-    <meta content="0x4AAAAAAEyI9mUVU3pthiYh" name="turnstile-sitekey"/><script defer="" src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"></script></head>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
+    <link href="./css/style.css" rel="stylesheet"/>
+    <link href="./css/contact.css" rel="stylesheet"/>
+    <link href="./css/guestbook.css" rel="stylesheet"/>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Lintang Mukti Nugroho","alternateName":"Limun","url":"https://limun-portfolio-website.vercel.app/","email":"mailto:lintangmunoh@gmail.com","sameAs":["https://github.com/LimunBF","https://www.linkedin.com/in/lintang-limun"],"alumniOf":{"@type":"CollegeOrUniversity","name":"Universitas Sebelas Maret"},"knowsAbout":["Web Development","Machine Learning","Computer Vision","Natural Language Processing","Software Engineering"]}</script>
+    <noscript><style>[data-aos]{opacity:1!important;transform:none!important}</style></noscript>
+    <meta content="0x4AAAAAAEyI9mUVU3pthiYh" name="turnstile-sitekey"/>
+    <script defer src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"></script>
+  </head>
   <body>
     <a class="skip-link" href="#main-content">
       Skip to content
@@ -24,12 +56,12 @@
     <header class="site-header">
       <div class="container header-inner">
         <a aria-label="Limun portfolio home" class="brand" href="#about">
-          <img alt="Limun logo" class="brand-logo" src="./images/limun-logo.png"/>
+          <img alt="Limun logo" class="brand-logo" decoding="async" fetchpriority="high" src="./images/logo_bagus.png"/>
           <span class="brand-name">
             LIMUN
           </span>
         </a>
-        <button aria-expanded="false" aria-label="Toggle navigation" class="menu-toggle">
+        <button aria-controls="primary-navigation" aria-expanded="false" aria-label="Open navigation" class="menu-toggle">
           <span>
           </span>
           <span>
@@ -37,7 +69,7 @@
           <span>
           </span>
         </button>
-        <nav aria-label="Primary navigation" class="site-nav">
+        <nav aria-label="Primary navigation" class="site-nav" id="primary-navigation">
           <a class="nav-link active" href="#about">
             About
           </a>
@@ -57,12 +89,12 @@
             Contact
           </a>
         </nav>
-        <a class="header-cta" href="https://www.linkedin.com/in/lintang-limun" rel="noopener noreferrer" target="_blank">
+        <a class="header-cta" href="https://www.linkedin.com/in/lintang-limun" rel="me noopener noreferrer" target="_blank">
           Let's Connect ↗
         </a>
       </div>
     </header>
-    <main id="main-content">
+    <main id="main-content" tabindex="-1">
       <section class="section section-about" id="about">
         <span aria-hidden="true" class="decor decor-dot decor-dot-a">
         </span>
@@ -193,7 +225,7 @@
                   </strong>
                 </span>
               </div>
-              <a class="quick-info-item quick-link" href="https://github.com/LimunBF" rel="noopener noreferrer" target="_blank">
+              <a class="quick-info-item quick-link" href="https://github.com/LimunBF" rel="me noopener noreferrer" target="_blank">
                 <span aria-hidden="true" class="quick-icon">
                   <svg viewbox="0 0 24 24">
                     <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3.3-.4 6.8-1.6 6.8-7A5.4 5.4 0 0 0 19.4 4 5 5 0 0 0 19.3.5S18.2.1 15 1.8a13.4 13.4 0 0 0-7 0C4.8.1 3.7.5 3.7.5A5 5 0 0 0 3.6 4a5.4 5.4 0 0 0-1.4 3.7c0 5.4 3.5 6.6 6.8 7A4.8 4.8 0 0 0 8 18v4">
@@ -214,7 +246,7 @@
                   ↗
                 </span>
               </a>
-              <a class="quick-info-item quick-link" href="https://www.linkedin.com/in/lintang-limun" rel="noopener noreferrer" target="_blank">
+              <a class="quick-info-item quick-link" href="https://www.linkedin.com/in/lintang-limun" rel="me noopener noreferrer" target="_blank">
                 <span aria-hidden="true" class="quick-icon">
                   <svg viewbox="0 0 24 24">
                     <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6Z">
@@ -260,93 +292,93 @@
           </div>
           <div class="skills-grid">
             <article class="skill-card bg-silver">
-              <img alt="Python" class="skill-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg"/>
+              <img alt="Python" class="skill-logo" decoding="async" fetchpriority="low" loading="lazy" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/python/python-original.svg"/>
               <h3>
                 Python
               </h3>
             </article>
             <article class="skill-card bg-coral">
-              <img alt="PHP" class="skill-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/php/php-original.svg"/>
+              <img alt="PHP" class="skill-logo" decoding="async" fetchpriority="low" loading="lazy" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/php/php-original.svg"/>
               <h3>
                 PHP / Laravel
               </h3>
-              <img alt="Laravel" class="skill-logo-mini" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/laravel/laravel-original.svg"/>
+              <img alt="Laravel" class="skill-logo-mini" decoding="async" fetchpriority="low" loading="lazy" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/laravel/laravel-original.svg"/>
             </article>
             <article class="skill-card bg-yellow">
-              <img alt="JavaScript" class="skill-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg"/>
+              <img alt="JavaScript" class="skill-logo" decoding="async" fetchpriority="low" loading="lazy" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg"/>
               <h3>
                 JavaScript
               </h3>
             </article>
             <article class="skill-card bg-cyan">
-              <img alt="React" class="skill-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg"/>
+              <img alt="React" class="skill-logo" decoding="async" fetchpriority="low" loading="lazy" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg"/>
               <h3>
                 React
               </h3>
             </article>
             <article class="skill-card bg-blush">
-              <img alt="PyTorch" class="skill-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/pytorch/pytorch-original.svg"/>
+              <img alt="PyTorch" class="skill-logo" decoding="async" fetchpriority="low" loading="lazy" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/pytorch/pytorch-original.svg"/>
               <h3>
                 PyTorch
               </h3>
             </article>
             <article class="skill-card bg-peach">
-              <img alt="MySQL" class="skill-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg"/>
+              <img alt="MySQL" class="skill-logo" decoding="async" fetchpriority="low" loading="lazy" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg"/>
               <h3>
                 MySQL
               </h3>
             </article>
             <article class="skill-card bg-lightblue">
-              <img alt="PostgreSQL" class="skill-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg"/>
+              <img alt="PostgreSQL" class="skill-logo" decoding="async" fetchpriority="low" loading="lazy" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg"/>
               <h3>
                 PostgreSQL
               </h3>
             </article>
             <article class="skill-card bg-purple">
-              <img alt="Flutter" class="skill-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/flutter/flutter-original.svg"/>
+              <img alt="Flutter" class="skill-logo" decoding="async" fetchpriority="low" loading="lazy" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/flutter/flutter-original.svg"/>
               <h3>
                 Flutter / Dart
               </h3>
-              <img alt="Dart" class="skill-logo-mini" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/dart/dart-original.svg"/>
+              <img alt="Dart" class="skill-logo-mini" decoding="async" fetchpriority="low" loading="lazy" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/dart/dart-original.svg"/>
             </article>
             <article class="skill-card bg-mint">
-              <img alt="Tailwind CSS" class="skill-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg"/>
+              <img alt="Tailwind CSS" class="skill-logo" decoding="async" fetchpriority="low" loading="lazy" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg"/>
               <h3>
                 Tailwind CSS
               </h3>
             </article>
             <article class="skill-card bg-sky">
-              <img alt="Bootstrap" class="skill-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bootstrap/bootstrap-original.svg"/>
+              <img alt="Bootstrap" class="skill-logo" decoding="async" fetchpriority="low" loading="lazy" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/bootstrap/bootstrap-original.svg"/>
               <h3>
                 Bootstrap
               </h3>
             </article>
             <article class="skill-card bg-rose">
-              <img alt="MediaPipe" class="skill-logo" src="https://cdn.simpleicons.org/mediapipe/111111"/>
+              <img alt="MediaPipe" class="skill-logo" decoding="async" fetchpriority="low" loading="lazy" src="https://cdn.simpleicons.org/mediapipe/111111"/>
               <h3>
                 MediaPipe
               </h3>
             </article>
             <article class="skill-card bg-yellow">
-              <img alt="Firebase" class="skill-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg"/>
+              <img alt="Firebase" class="skill-logo" decoding="async" fetchpriority="low" loading="lazy" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg"/>
               <h3>
                 Firebase
               </h3>
             </article>
             <article class="skill-card bg-sand">
-              <img alt="SQLite" class="skill-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/sqlite/sqlite-original.svg"/>
+              <img alt="SQLite" class="skill-logo" decoding="async" fetchpriority="low" loading="lazy" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/sqlite/sqlite-original.svg"/>
               <h3>
                 SQLite
               </h3>
             </article>
             <article class="skill-card bg-green">
-              <img alt="Git" class="skill-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg"/>
+              <img alt="Git" class="skill-logo" decoding="async" fetchpriority="low" loading="lazy" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg"/>
               <h3>
                 Git
               </h3>
             </article>
             <article class="skill-card bg-aqua">
-              <img alt="Postman" class="skill-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postman/postman-original.svg"/>
+              <img alt="Postman" class="skill-logo" decoding="async" fetchpriority="low" loading="lazy" src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postman/postman-original.svg"/>
               <h3>
                 Postman
               </h3>
@@ -380,7 +412,7 @@
                 </span>
               </div>
               <h3>
-                Automated Essay Scoring — SBERT
+                Automated Essay Scoring - SBERT
               </h3>
               <p>
                 Indonesian essay scoring system using Multilingual SBERT and Hybrid Scoring, with fine-tuning and 5-fold
@@ -397,11 +429,11 @@
                   NLP
                 </span>
               </div>
-              <div aria-label="Automated Essay Scoring — SBERT screenshot preview" class="hover-preview project-preview" data-count="1" id="project-preview-1">
+              <div aria-label="Automated Essay Scoring - SBERT screenshot preview" class="hover-preview project-preview" data-count="1" id="project-preview-1">
                 <div class="preview-grid">
                   <figure class="preview-frame">
-                    <button aria-label="Open Automated Essay Scoring — SBERT screenshot 1 full size" class="image-preview-button" data-lightbox-group="project-1" type="button">
-                      <img alt="Automated Essay Scoring — SBERT screenshot 1" decoding="async" fetchpriority="low" loading="lazy" src="./assets/img/img_01_project-1.png"/>
+                    <button aria-label="Open Automated Essay Scoring -SBERT screenshot 1 full size" class="image-preview-button" data-lightbox-group="project-1" type="button">
+                      <img alt="Automated Essay Scoring - SBERT screenshot 1" decoding="async" fetchpriority="low" loading="lazy" src="./assets/img/img_01_project-1.png"/>
                       <span class="image-zoom-hint">
                         View full size ↗
                       </span>
@@ -409,7 +441,7 @@
                   </figure>
                 </div>
               </div><div class="project-actions">
-                <button aria-controls="project-preview-1" aria-expanded="false" aria-label="Toggle screenshots for Automated Essay Scoring — SBERT" class="preview-toggle" data-preview-toggle="" type="button">
+                <button aria-controls="project-preview-1" aria-expanded="false" aria-label="Toggle screenshots for Automated Essay Scoring - SBERT" class="preview-toggle" data-preview-toggle="" type="button">
                   <span aria-hidden="true" class="preview-toggle-icon">
                     <svg viewbox="0 0 24 24">
                       <rect height="14" rx="1" width="18" x="3" y="5">
@@ -1016,7 +1048,7 @@
               </span>
             </div>
             <p class="section-lead">
-              A timeline of hands-on experience — combining software development, teaching, and team
+              A timeline of hands-on experience - combining software development, teaching, and team
               operations.
             </p>
           </div>
@@ -1042,7 +1074,7 @@
                   </div>
                   <div class="timeline-badges">
                     <span>
-                      SEP 2025 — DEC 2025
+                      SEP 2025 - DEC 2025
                     </span>
                     <b>
                       PLP
@@ -1125,7 +1157,7 @@
                   </div>
                   <div class="timeline-badges">
                     <span>
-                      2023 — 2024
+                      2023 - 2024
                     </span>
                     <b>
                       VOLUNTEER
@@ -1241,7 +1273,7 @@
                 </a>
               </div>
               <div class="contact-pro-socials">
-                <a href="https://www.linkedin.com/in/lintang-limun" rel="noopener noreferrer" target="_blank">
+                <a href="https://www.linkedin.com/in/lintang-limun" rel="me noopener noreferrer" target="_blank">
                   <span aria-hidden="true" class="contact-pro-mini-icon">
                     <svg viewbox="0 0 24 24">
                       <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6Z"></path>
@@ -1252,7 +1284,7 @@
                   LinkedIn
                   <b aria-hidden="true">↗</b>
                 </a>
-                <a href="https://github.com/LimunBF" rel="noopener noreferrer" target="_blank">
+                <a href="https://github.com/LimunBF" rel="me noopener noreferrer" target="_blank">
                   <span aria-hidden="true" class="contact-pro-mini-icon">
                     <svg viewbox="0 0 24 24">
                       <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3.3-.4 6.8-1.6 6.8-7A5.4 5.4 0 0 0 19.4 4 5 5 0 0 0 19.3.5S18.2.1 15 1.8a13.4 13.4 0 0 0-7 0C4.8.1 3.7.5 3.7.5A5 5 0 0 0 3.6 4a5.4 5.4 0 0 0-1.4 3.7c0 5.4 3.5 6.6 6.8 7A4.8 4.8 0 0 0 8 18v4"></path>
@@ -1264,7 +1296,7 @@
               </div>
               <p class="contact-pro-security-note">
                 Protected by Cloudflare Turnstile. Your message is sent through a server-side
-                Vercel Function — API credentials are never exposed in the browser.
+                Vercel Function - API credentials are never exposed in the browser.
               </p>
             </div>
             <form class="contact-pro-form" id="contact-form" novalidate="">
@@ -1372,7 +1404,7 @@
                     </div>
                     <div class="guestbook-form-footer">
                       <p class="guestbook-form-note">
-                        Local preview for now — a public backend can be connected later.
+                        Your note will go live after approval ✦
                       </p>
                       <button class="guestbook-submit" type="submit">
                         <span>Leave a note</span>
@@ -1385,42 +1417,15 @@
                     <div class="guestbook-board-header">
                       <div>
                         <p class="eyebrow">Latest notes</p>
-                        <h3>Wall of tiny messages</h3>
-                      </div>
-                      <span class="guestbook-count">
-                        <strong id="guestbook-note-count">3</strong>
+                        <h3>Wall of Tiny Messages</h3>
+                      </div>                      <span class="guestbook-count">
+                        <strong id="guestbook-note-count">0</strong>
                         NOTES
                       </span>
                     </div>
-                    <div aria-live="polite" class="guestbook-notes" id="guestbook-notes">
-                      <article class="guestbook-note guestbook-note-pink" data-sample-note="">
-                        <span aria-hidden="true" class="guestbook-note-mark">“</span>
-                        <p>The project previews are such a fun touch. Nice work!</p>
-                        <div class="guestbook-note-meta">
-                          <strong>Sample Visitor</strong>
-                          <span>Sample note</span>
-                        </div>
-                      </article>
-                      <article class="guestbook-note guestbook-note-yellow" data-sample-note="">
-                        <span aria-hidden="true" class="guestbook-note-mark">“</span>
-                        <p>Clean, playful, and still feels professional. Keep building.</p>
-                        <div class="guestbook-note-meta">
-                          <strong>Internet Stranger</strong>
-                          <span>Sample note</span>
-                        </div>
-                      </article>
-                      <article class="guestbook-note guestbook-note-blue" data-sample-note="">
-                        <span aria-hidden="true" class="guestbook-note-mark">“</span>
-                        <p>I came for the projects and stayed for the neo-brutalism.</p>
-                        <div class="guestbook-note-meta">
-                          <strong>Anonymous</strong>
-                          <span>Sample note</span>
-                        </div>
-                      </article>
-                    </div>
+                    <div aria-live="polite" class="guestbook-notes" id="guestbook-notes"></div>
                     <p class="guestbook-board-footnote">
-                      Sample notes are placeholders. Notes you add here are stored only
-                      in this browser until a public guestbook backend is connected.
+                      A tiny wall of approved messages from people passing by.
                     </p>
                   </div>
                 </div>
@@ -1430,7 +1435,7 @@
         </div>
       </section>
     </main>
-    <div aria-hidden="true" aria-label="Image preview" aria-modal="true" class="lightbox" id="image-lightbox" role="dialog">
+    <div aria-describedby="lightbox-caption" aria-hidden="true" aria-label="Image preview" aria-modal="true" class="lightbox" id="image-lightbox" role="dialog">
       <button aria-label="Close image viewer" class="lightbox-close" type="button">
         ×
       </button>
@@ -1439,7 +1444,7 @@
       </button>
       <figure class="lightbox-stage" role="document">
         <img alt="" class="lightbox-image" src=""/>
-        <figcaption class="lightbox-caption">
+        <figcaption class="lightbox-caption" id="lightbox-caption">
         </figcaption>
       </figure>
       <button aria-label="Next image" class="lightbox-nav lightbox-next" type="button">
@@ -1451,8 +1456,8 @@
       </div>
       <div class="container footer-inner">
         <div class="footer-brand">
-          <a class="brand footer-logo-wrap" href="#about">
-            <img alt="Limun logo" class="brand-logo" src="./images/logo_bagus.png"/>
+          <a aria-label="Back to About" class="brand footer-logo-wrap" href="#about">
+            <img alt="Limun logo" class="brand-logo" decoding="async" loading="lazy" src="./images/logo_bagus.png"/>
             <span class="brand-name">
               LIMUN
             </span>
@@ -1466,7 +1471,7 @@
           </p>
         </div>
         <div aria-label="Social links" class="footer-socials">
-          <a aria-label="LinkedIn" href="https://www.linkedin.com/in/lintang-limun" rel="noopener noreferrer" target="_blank">
+          <a aria-label="LinkedIn" href="https://www.linkedin.com/in/lintang-limun" rel="me noopener noreferrer" target="_blank">
             <svg viewbox="0 0 24 24">
               <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6Z">
               </path>
@@ -1476,7 +1481,7 @@
               </circle>
             </svg>
           </a>
-          <a aria-label="GitHub" href="https://github.com/LimunBF" rel="noopener noreferrer" target="_blank">
+          <a aria-label="GitHub" href="https://github.com/LimunBF" rel="me noopener noreferrer" target="_blank">
             <svg viewbox="0 0 24 24">
               <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3.3-.4 6.8-1.6 6.8-7A5.4 5.4 0 0 0 19.4 4 5 5 0 0 0 19.3.5S18.2.1 15 1.8a13.4 13.4 0 0 0-7 0C4.8.1 3.7.5 3.7.5A5 5 0 0 0 3.6 4a5.4 5.4 0 0 0-1.4 3.7c0 5.4 3.5 6.6 6.8 7A4.8 4.8 0 0 0 8 18v4">
               </path>
@@ -1501,9 +1506,9 @@
         </div>
       </div>
     </footer>
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js">
-</script>
-    <script defer="" src="./js/ux-enhancements.js">
-</script><script defer="" src="./js/contact.js"></script><script defer="" src="./js/guestbook.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script defer src="./js/ux-enhancements.js"></script>
+    <script defer src="./js/contact.js"></script>
+    <script defer src="./js/guestbook.js"></script>
   </body>
 </html>

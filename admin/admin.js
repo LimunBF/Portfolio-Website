@@ -607,22 +607,211 @@ async function loadNotes() {
   }
 }
 
+/* =========================================================
+   SMOOTH LOCAL UI UPDATE
+   ========================================================= */
+
+function getNoteCard(id) {
+  return noteList.querySelector(
+    `[data-note-id="${CSS.escape(id)}"]`
+  );
+}
+
+
+function setActionBusy(
+  id,
+  action,
+  busy
+) {
+  const card =
+    getNoteCard(id);
+
+  if (!card) return;
+
+
+  const buttons =
+    card.querySelectorAll(
+      "[data-action]"
+    );
+
+
+  buttons.forEach(button => {
+    button.disabled =
+      busy;
+  });
+
+
+  if (busy) {
+    card.classList.add(
+      "is-busy"
+    );
+
+    card.setAttribute(
+      "aria-busy",
+      "true"
+    );
+
+  } else {
+    card.classList.remove(
+      "is-busy"
+    );
+
+    card.removeAttribute(
+      "aria-busy"
+    );
+  }
+
+
+  const targetButton =
+    card.querySelector(
+      `[data-action="${CSS.escape(action)}"]`
+    );
+
+
+  if (!targetButton) return;
+
+
+  if (busy) {
+    targetButton.dataset.originalLabel =
+      targetButton.textContent;
+
+
+    const labels = {
+      approve:
+        "Approving...",
+
+      reject:
+        "Rejecting...",
+
+      pending:
+        "Moving...",
+
+      delete:
+        "Deleting..."
+    };
+
+
+    targetButton.textContent =
+      labels[action] ||
+      "Working...";
+
+  } else {
+    const original =
+      targetButton.dataset
+        .originalLabel;
+
+
+    if (original) {
+      targetButton.textContent =
+        original;
+
+      delete targetButton.dataset
+        .originalLabel;
+    }
+  }
+}
+
+
+function updateLocalNote(
+  id,
+  action
+) {
+  const note =
+    notes.find(
+      item =>
+        item.id === id
+    );
+
+
+  if (!note) {
+    return;
+  }
+
+
+  if (action === "approve") {
+    note.approved =
+      true;
+
+    note.status =
+      "approved";
+
+  } else if (
+    action === "reject"
+  ) {
+    note.approved =
+      false;
+
+    note.status =
+      "rejected";
+
+  } else if (
+    action === "pending"
+  ) {
+    note.approved =
+      false;
+
+    note.status =
+      "pending";
+  }
+
+
+  note.moderatedAt =
+    new Date()
+      .toISOString();
+}
+
+
+function transitionAndRender(
+  id,
+  type = "update"
+) {
+  const card =
+    getNoteCard(id);
+
+
+  updateStats();
+
+
+  if (!card) {
+    renderNotes();
+    return;
+  }
+
+
+  card.classList.add(
+    type === "delete"
+      ? "is-removing"
+      : "is-transitioning"
+  );
+
+
+  window.setTimeout(
+    () => {
+      renderNotes();
+    },
+    190
+  );
+}
 
 async function moderateNote(
   id,
   action
 ) {
-  setCardBusy(
+  setActionBusy(
     id,
+    action,
     true
   );
 
+
   try {
+
     const data =
       await apiRequest(
         "/api/admin/guestbook",
         {
-          method: "PATCH",
+          method:
+            "PATCH",
 
           body:
             JSON.stringify({
@@ -632,42 +821,77 @@ async function moderateNote(
         }
       );
 
+
+    /*
+      Server sudah sukses.
+      Baru setelah itu UI lokal diubah.
+    */
+
+    updateLocalNote(
+      id,
+      action
+    );
+
+
     const verb = {
-      approve: "approved",
-      reject: "rejected",
-      pending: "moved to pending"
+      approve:
+        "approved",
+
+      reject:
+        "rejected",
+
+      pending:
+        "moved to pending"
     }[action] || "updated";
+
 
     showToast(
       `Note ${verb}.`
     );
 
-    await loadNotes();
+
+    transitionAndRender(
+      id,
+      "update"
+    );
+
 
     return data;
 
+
   } catch (error) {
+
+    setActionBusy(
+      id,
+      action,
+      false
+    );
+
+
     showToast(
       error.message ||
       "Could not update note.",
       "error"
-    );
-
-  } finally {
-    setCardBusy(
-      id,
-      false
     );
   }
 }
 
 
 async function deleteNote(id) {
+  setActionBusy(
+    id,
+    "delete",
+    true
+  );
+
+
   try {
+
     await apiRequest(
       "/api/admin/guestbook",
       {
-        method: "DELETE",
+        method:
+          "DELETE",
 
         body:
           JSON.stringify({
@@ -676,13 +900,39 @@ async function deleteNote(id) {
       }
     );
 
+
+    /*
+      Hapus dari state lokal
+      setelah server confirmed.
+    */
+
+    notes =
+      notes.filter(
+        note =>
+          note.id !== id
+      );
+
+
     showToast(
       "Note deleted permanently."
     );
 
-    await loadNotes();
+
+    transitionAndRender(
+      id,
+      "delete"
+    );
+
 
   } catch (error) {
+
+    setActionBusy(
+      id,
+      "delete",
+      false
+    );
+
+
     showToast(
       error.message ||
       "Could not delete note.",

@@ -463,6 +463,17 @@
     width: 42px;
     height: 42px;
   }
+
+  /* Keep form fields readable on phones and prevent iOS focus zoom. */
+  .contact-pro-field input,
+  .contact-pro-field textarea {
+    font-size: 16px;
+  }
+
+  .contact-pro-field label,
+  .contact-pro-label-row > span {
+    font-size: 10px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -477,4 +488,11 @@
   .contact-pro-submit {
     transition: none;
   }
+}
+
+/* Pass 3: stronger keyboard focus for form controls. */
+.contact-pro-field input:focus-visible,
+.contact-pro-field textarea:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
 }

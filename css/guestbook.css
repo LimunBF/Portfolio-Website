@@ -181,14 +181,48 @@
   width: 42px;
   height: 42px;
   flex: 0 0 auto;
+  display: grid;
+  place-items: center;
   border: var(--border);
   background: var(--ink);
   color: #fff;
   box-shadow: 4px 4px 0 var(--yellow);
   font: inherit;
   font-size: 24px;
+  line-height: 1;
   font-weight: 900;
   cursor: pointer;
+  transition:
+    transform .16s ease,
+    box-shadow .16s ease,
+    background .16s ease,
+    color .16s ease;
+}
+
+/* Red danger-style micro interaction for the guestbook close button. */
+.guestbook-close:hover,
+.guestbook-close:focus-visible {
+  background: #ff5f6d;
+  color: #fff;
+  transform: translate(-3px,-3px) rotate(-3deg);
+  box-shadow:
+    4px 4px 0 #ffb1b8,
+    8px 8px 0 var(--ink);
+}
+
+.guestbook-close:active {
+  background: #e94255;
+  transform: translate(2px,2px) scale(.96);
+  box-shadow: 1px 1px 0 #ffb1b8;
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .guestbook-close:active {
+    background: #ff5f6d;
+    color: #fff;
+    transform: translate(2px,2px) scale(.96);
+    box-shadow: 1px 1px 0 #ffb1b8;
+  }
 }
 
 .guestbook-layout {
@@ -308,6 +342,73 @@
   box-shadow: 5px 5px 0 var(--ink);
 }
 
+
+/* Dynamic verification + loading states */
+.guestbook-turnstile-wrap {
+  margin-top: 18px;
+  min-width: 0;
+}
+
+#guestbook-turnstile {
+  width: 100%;
+  min-height: 65px;
+  overflow: hidden;
+}
+
+.guestbook-turnstile-hint {
+  min-height: 18px;
+  margin-top: 7px;
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.45;
+  font-weight: 700;
+}
+
+.guestbook-turnstile-hint.is-error,
+.guestbook-status.is-error {
+  color: #982c45;
+}
+
+.guestbook-loading,
+.guestbook-empty-state {
+  grid-column: 1 / -1;
+  min-height: 142px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 9px;
+  padding: 22px 18px;
+  border: 2px dashed var(--ink);
+  background: var(--yellow-soft);
+  text-align: center;
+}
+
+.guestbook-loading > span {
+  width: 28px;
+  height: 28px;
+  border: 3px solid rgba(31,27,45,.18);
+  border-top-color: var(--ink);
+  border-radius: 50%;
+  animation: guestbook-spin .75s linear infinite;
+}
+
+.guestbook-loading p,
+.guestbook-empty-state p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.55;
+  font-weight: 700;
+}
+
+.guestbook-empty-state strong {
+  font-size: 13px;
+}
+
+@keyframes guestbook-spin {
+  to { transform: rotate(360deg); }
+}
+
 .guestbook-form-footer {
   display: grid;
   grid-template-columns: minmax(0,1fr) auto;
@@ -319,8 +420,17 @@
 .guestbook-form-note,
 .guestbook-board-footnote {
   color: var(--muted);
-  font-size: 8.5px;
-  line-height: 1.5;
+  line-height: 1.55;
+}
+
+.guestbook-form-note {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.guestbook-board-footnote {
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .guestbook-submit {
@@ -338,12 +448,47 @@
   font-size: 9.5px;
   font-weight: 900;
   cursor: pointer;
+  touch-action: manipulation;
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease,
+    background .18s ease,
+    opacity .18s ease;
+}
+
+.guestbook-submit b {
+  transition: transform .18s ease;
+}
+
+.guestbook-submit:hover:not(:disabled),
+.guestbook-submit:focus-visible:not(:disabled) {
+  background: var(--aqua);
+  transform: translate(-2px,-2px);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+
+.guestbook-submit:hover:not(:disabled) b,
+.guestbook-submit:focus-visible:not(:disabled) b {
+  transform: translate(2px,-2px);
+}
+
+.guestbook-submit:active:not(:disabled) {
+  transform: translate(1px,1px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+.guestbook-submit:disabled {
+  cursor: wait;
+  opacity: .68;
+  transform: none;
+  box-shadow: 2px 2px 0 var(--ink);
 }
 
 .guestbook-status {
-  min-height: 18px;
+  min-height: 20px;
   margin-top: 10px;
-  font-size: 9px;
+  font-size: 10px;
+  line-height: 1.5;
   font-weight: 800;
 }
 
@@ -500,16 +645,57 @@
   .guestbook-note {
     scroll-snap-align: start;
   }
+
+  /* Keep form fields readable on phones and avoid iOS focus zoom. */
+  .guestbook-field input,
+  .guestbook-field textarea {
+    font-size: 16px;
+  }
+
+  .guestbook-field label,
+  .guestbook-counter {
+    font-size: 10px;
+  }
+
+  .guestbook-note > p {
+    font-size: 13px;
+    line-height: 1.58;
+  }
+
+  .guestbook-note-meta strong {
+    font-size: 10.5px;
+  }
+
+  .guestbook-note-meta span {
+    font-size: 9px;
+  }
+
+  .guestbook-turnstile-hint,
+  .guestbook-status {
+    font-size: 10px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .guestbook-loading > span {
+    animation-duration: 1.5s;
+  }
+
   .guestbook-collapsible,
   .guestbook-reveal,
-  .guestbook-reveal-action b {
+  .guestbook-reveal-action b,
+  .guestbook-close {
     transition: none;
   }
 
   .guestbook-glow {
     filter: blur(45px);
   }
+}
+
+/* Pass 3: stronger keyboard focus for form controls. */
+.guestbook-field input:focus-visible,
+.guestbook-field textarea:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
 }

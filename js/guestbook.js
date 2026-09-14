@@ -42,6 +42,9 @@
 
   let turnstileWidgetId = null;
   let turnstileToken = "";
+  let turnstileRetryTimer = null;
+  let turnstileLoadAttempts = 0;
+  const TURNSTILE_MAX_ATTEMPTS = 40;
 
   let startedAt = Date.now();
   let notesLoaded = false;
@@ -91,6 +94,13 @@
     */
     if (open) {
       renderGuestbookTurnstile();
+    } else {
+      if (turnstileRetryTimer !== null) {
+        window.clearTimeout(turnstileRetryTimer);
+        turnstileRetryTimer = null;
+      }
+
+      turnstileLoadAttempts = 0;
     }
   }
 
@@ -269,13 +279,32 @@
       loading ketika guestbook dibuka.
     */
     if (!window.turnstile?.render) {
-      window.setTimeout(
-        renderGuestbookTurnstile,
+      if (turnstileRetryTimer !== null) {
+        return;
+      }
+
+      if (turnstileLoadAttempts >= TURNSTILE_MAX_ATTEMPTS) {
+        hint.textContent =
+          "Security verification could not load. Check your connection and reopen the guestbook.";
+
+        hint.classList.add("is-error");
+        return;
+      }
+
+      turnstileLoadAttempts += 1;
+
+      turnstileRetryTimer = window.setTimeout(
+        () => {
+          turnstileRetryTimer = null;
+          renderGuestbookTurnstile();
+        },
         150
       );
 
       return;
     }
+
+    turnstileLoadAttempts = 0;
 
 
     /*
@@ -531,7 +560,7 @@
       document.createElement("p");
 
     description.textContent =
-      "You could be the first one to leave something here.";
+      "You could be the first one to leave something here ✦";
 
 
     empty.append(
@@ -555,6 +584,11 @@
      ========================================================= */
 
   function showLoadingState() {
+    notesContainer.setAttribute(
+      "aria-busy",
+      "true"
+    );
+
     notesContainer.innerHTML = "";
 
 
@@ -664,7 +698,6 @@
 
 
       failed.innerHTML = `
-        <span>!</span>
         <strong>Could not load notes.</strong>
         <p>Please try again later.</p>
       `;
@@ -681,6 +714,12 @@
       console.error(
         "Guestbook load error:",
         error
+      );
+
+    } finally {
+      notesContainer.setAttribute(
+        "aria-busy",
+        "false"
       );
     }
   }

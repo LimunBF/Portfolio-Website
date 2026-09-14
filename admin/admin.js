@@ -73,6 +73,47 @@ const toast =
    CONFIG
    ========================================================= */
 
+const VALID_STATUSES = [
+  "pending",
+  "approved",
+  "rejected",
+  "all"
+];
+
+
+function setActiveStatus(
+  status = "all",
+  render = true
+) {
+  activeStatus =
+    VALID_STATUSES.includes(status)
+      ? status
+      : "all";
+
+
+  document
+    .querySelectorAll(
+      "[data-status-filter]"
+    )
+    .forEach(button => {
+
+      button.addEventListener(
+        "click",
+        () => {
+          setActiveStatus(
+            button.dataset.statusFilter
+          );
+        }
+      );
+
+  });
+
+
+  if (render) {
+    renderNotes();
+  }
+}
+
 const firebaseConfig =
   window.LIMUN_FIREBASE_CONFIG || {};
 
@@ -92,7 +133,7 @@ let currentUser = null;
 let adminInfo = null;
 let notes = [];
 
-let activeStatus = "pending";
+let activeStatus = "all";
 let searchTerm = "";
 let pendingDeleteId = null;
 let toastTimer = null;
@@ -494,6 +535,16 @@ async function handleSignedIn(user) {
 
     setLoginStatus("");
 
+    setActiveStatus(
+      "all",
+      false
+    );
+
+    searchTerm = "";
+
+    if (searchInput) {
+      searchInput.value = "";
+    }
 
     await loadNotes();
 
@@ -529,18 +580,29 @@ async function handleSignedIn(user) {
 function handleSignedOut() {
   currentUser = null;
   adminInfo = null;
+  dashboard.hidden = true;
+  loginView.hidden = false;
   notes = [];
+
+  activeStatus = "all";
+  searchTerm = "";
+
+  setLoginStatus("");
+  setActiveStatus(
+    "all",
+    false
+  );
+
+  if (searchInput) {
+    searchInput.value = "";
+  }
 
   if (userMenu) {
     userMenu.hidden = true;
   }
-
-  dashboard.hidden =
-    true;
-
-  loginView.hidden =
-    false;
 }
+
+await loadNotes();
 
 
 /* =========================================================

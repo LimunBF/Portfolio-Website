@@ -169,16 +169,17 @@ img, svg { display: block; }
 .about-layout { display: block; }
 .about-copy { width: 100%; }
 .about-text-block {
-  max-width: 980px;
-  margin: 0 0 44px 34px;
+  max-width: 100%;
+  margin: 0 0 44px;
   padding: 4px 0 4px 24px;
   border-left: 4px solid var(--pink);
   text-align: justify;
+  hyphens: auto;
 }
 .about-text-block p {
   font-size: clamp(16px, 1.35vw, 18px);
   line-height: 1.82;
-  text-align: left;
+  text-align: justify;
 }
 .about-cards { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
 .feature-card, .project-card, .certificate-card, .timeline-card, .skill-card { border: var(--border); }

@@ -343,4 +343,24 @@
       closeProjectPreviews();
     }
   });
+
+  // Missing-image fallback: swap a broken <img> for a clean placeholder panel so the
+  // page never shows a broken-image icon before the real screenshot is added.
+  document.querySelectorAll('.preview-frame img, .certificate-slot img').forEach(img => {
+    const frame = img.closest('.preview-frame, .certificate-slot');
+    if (!frame) return;
+
+    const markMissing = () => {
+      frame.classList.add('is-missing');
+      if (!frame.dataset.placeholder) {
+        frame.dataset.placeholder = img.alt || 'Screenshot coming soon';
+      }
+      img.remove();
+    };
+
+    img.addEventListener('error', markMissing, { once: true });
+
+    // Catch images that already failed before this script ran.
+    if (img.complete && img.naturalWidth === 0) markMissing();
+  });
 })();

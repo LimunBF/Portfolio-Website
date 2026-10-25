@@ -273,24 +273,27 @@ img, svg { display: block; }
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .project-card:hover,
-  .project-card:focus-within {
+  .project-card:hover {
     z-index: 20;
     transform: translate(-2px, -2px);
     box-shadow: 8px 8px 0 var(--ink);
   }
+}
 
-  .projects-grid:has(.project-card:hover) .project-card:not(:hover),
-  .projects-grid:has(.project-card:focus-within) .project-card:not(:focus-within) {
-    opacity: .72;
-    filter: saturate(.88);
-    transform: scale(.994);
+@media (min-width: 769px) {
+  .project-card:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    width: calc((100% - 28px) / 2);
+    justify-self: center;
   }
 }
 
 .project-cyan { background: var(--aqua); }
 .project-yellow { background: var(--yellow); }
 .project-pink { background: var(--pink); }
+.project-lavender { background: var(--lavender); }
+.project-blue { background: var(--blue); }
+.project-coral { background: var(--coral); }
 
 .project-meta {
   display: flex;
@@ -419,6 +422,38 @@ img, svg { display: block; }
   background: #fff;
   box-shadow: 3px 3px 0 var(--ink);
   overflow: hidden;
+}
+
+/* Until the real screenshot is dropped in, show a clean "coming soon" panel
+   instead of a broken-image icon. The img carries an onerror that adds .is-missing. */
+.preview-frame.is-missing {
+  min-height: 150px;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 7px;
+  padding: 20px;
+  background:
+    repeating-linear-gradient(45deg, rgba(31,27,45,.045) 0 10px, transparent 10px 20px),
+    #fff;
+  text-align: center;
+}
+
+.preview-frame.is-missing::before {
+  content: '📷';
+  font-size: 22px;
+  line-height: 1;
+  opacity: .45;
+}
+
+.preview-frame.is-missing::after {
+  content: attr(data-placeholder);
+  font-size: 10.5px;
+  line-height: 1.5;
+  font-weight: 800;
+  letter-spacing: .03em;
+  color: var(--muted);
+  max-width: 24ch;
 }
 
 .image-preview-button {
@@ -684,21 +719,140 @@ img, svg { display: block; }
   gap: 12px;
 }
 
-.certificate-thumbnail .preview-frame {
+/* Certificate media: 1 image, 2 images, or any mix with a PDF slot. */
+.certificate-media {
   width: 100%;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr;
+}
+
+.certificate-media[data-count="2"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.certificate-media[data-count="3"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.certificate-media[data-count="3"] .certificate-slot:first-child {
+  grid-column: 1 / -1;
+}
+
+.certificate-slot {
+  min-width: 0;
+  margin: 0;
+  border: 2px solid var(--ink);
+  background: #fff;
   box-shadow: 5px 5px 0 var(--ink);
+  overflow: hidden;
+  display: flex;
 }
 
-.certificate-thumbnail .image-preview-button {
+.certificate-slot .image-preview-button {
+  width: 100%;
   min-height: 220px;
+  position: relative;
 }
 
-.certificate-thumbnail .image-preview-button img {
+.certificate-slot .image-preview-button img {
   width: 100%;
   height: auto;
   max-height: 285px;
   object-fit: contain;
   object-position: center;
+}
+
+/* Placeholder shown until the owner drops the real file in. */
+.certificate-slot-empty {
+  width: 100%;
+  min-height: 220px;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 8px;
+  padding: 20px;
+  border: 0;
+  background:
+    repeating-linear-gradient(45deg, rgba(31,27,45,.045) 0 10px, transparent 10px 20px),
+    #fff;
+  color: var(--muted);
+  font: inherit;
+  text-align: center;
+  cursor: default;
+}
+
+.certificate-slot-empty strong {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.certificate-slot-empty span {
+  font-size: 10.5px;
+  line-height: 1.5;
+  font-weight: 700;
+  max-width: 22ch;
+}
+
+.certificate-slot-empty svg {
+  width: 30px;
+  height: 30px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: .55;
+}
+
+/* PDF slot — opens in a new tab, no PDF.js needed. */
+.certificate-pdf-link {
+  width: 100%;
+  min-height: 220px;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 10px;
+  padding: 20px;
+  background:
+    linear-gradient(150deg, rgba(255,182,207,.35), rgba(255,255,255,.9)),
+    #fff;
+  color: var(--ink);
+  text-align: center;
+  transition: background .18s ease, transform .18s ease;
+}
+
+.certificate-pdf-link:hover,
+.certificate-pdf-link:focus-visible {
+  background: var(--lavender-soft);
+}
+
+.certificate-pdf-link svg {
+  width: 34px;
+  height: 34px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.certificate-pdf-link strong {
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.certificate-pdf-link span {
+  font-size: 10.5px;
+  line-height: 1.5;
+  font-weight: 700;
+  color: var(--muted);
+  max-width: 24ch;
 }
 
 .certificate-thumbnail figcaption {
@@ -924,7 +1078,7 @@ body.lightbox-open {
 
   .certificate-card { grid-template-columns: 1fr; }
   .certificate-thumbnail { border-left: 0; border-top: var(--border); }
-  .certificate-thumbnail .image-preview-button img { max-height: 360px; }
+  .certificate-slot .image-preview-button img { max-height: 360px; }
 }
 
 @media (max-width: 760px) {
@@ -1033,8 +1187,22 @@ body.lightbox-open {
     min-height: 0;
   }
 
-  .certificate-thumbnail .image-preview-button img {
+  .certificate-slot .image-preview-button img {
     max-height: 420px;
+  }
+
+  .certificate-media[data-count="2"],
+  .certificate-media[data-count="3"] {
+    grid-template-columns: 1fr;
+  }
+
+  .certificate-media[data-count="3"] .certificate-slot:first-child {
+    grid-column: auto;
+  }
+
+  .certificate-slot-empty,
+  .certificate-pdf-link {
+    min-height: 170px;
   }
 
   .certificate-view-button {

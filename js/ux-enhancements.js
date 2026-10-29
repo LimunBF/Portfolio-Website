@@ -89,13 +89,15 @@
     const safeTop = headerHeight() + 14;
     const safeBottom = window.innerHeight - 24;
 
-    if (rect.top < safeTop || rect.bottom > safeBottom) {
-      preview.scrollIntoView({
-        behavior: reduceMotion.matches ? 'auto' : 'smooth',
-        block: 'nearest',
-        inline: 'nearest'
-      });
-    }
+    if (rect.top >= safeTop && rect.bottom <= safeBottom) return;
+
+    // A tall gallery cannot fit in one viewport, so align its top edge instead of
+    // trying to centre it, otherwise the first screenshot lands off-screen.
+    const target = window.scrollY + rect.top - safeTop;
+    window.scrollTo({
+      top: Math.max(target, 0),
+      behavior: reduceMotion.matches ? 'auto' : 'smooth'
+    });
   };
 
   // Project screenshot accordion/pinning.
@@ -176,6 +178,80 @@
       });
     }
   });
+
+  // More projects disclosure + category filter (filter applies to the collapsed list only).
+  const moreToggle = document.querySelector('.more-projects-toggle');
+  const morePanel = document.getElementById('more-projects-panel');
+  const moreGrid = document.getElementById('more-projects-grid');
+  const filterStatus = document.getElementById('project-filter-status');
+  const filterChips = [...document.querySelectorAll('#more-projects-panel .filter-chip')];
+  const emptyState = document.querySelector('.project-empty');
+
+  // Centre the final card of each grid when the visible count is odd, so the last
+  // row is not left-aligned with an empty slot beside it. Must be recomputed after
+  // filtering and after the more-projects panel opens or closes.
+  const markLastVisibleCard = grid => {
+    if (!grid) return;
+
+    const cards = [...grid.querySelectorAll('.project-card')];
+    cards.forEach(card => card.classList.remove('is-last-visible'));
+
+    const visible = cards.filter(card => !card.hidden);
+    if (visible.length % 2 === 1) visible[visible.length - 1].classList.add('is-last-visible');
+  };
+
+  const refreshGridAlignment = () => {
+    markLastVisibleCard(document.getElementById('featured-projects-grid'));
+    markLastVisibleCard(moreGrid);
+  };
+
+  const applyFilter = filter => {
+    if (!moreGrid) return;
+
+    let shown = 0;
+    [...moreGrid.querySelectorAll('.project-card')].forEach(card => {
+      const match = filter === 'all' || card.dataset.projectCategory === filter;
+      card.hidden = !match;
+      if (match) shown += 1;
+    });
+
+    if (emptyState) emptyState.hidden = shown !== 0;
+
+    filterChips.forEach(chip => {
+      const active = chip.dataset.filter === filter;
+      chip.classList.toggle('is-active', active);
+      chip.setAttribute('aria-pressed', String(active));
+    });
+
+    if (filterStatus) {
+      filterStatus.textContent = filter === 'all'
+        ? `${shown} more projects`
+        : `${shown} of 5 more projects`;
+    }
+
+    refreshGridAlignment();
+  };
+
+  const setMoreProjectsOpen = open => {
+    if (!moreToggle || !morePanel) return;
+
+    moreToggle.setAttribute('aria-expanded', String(open));
+    moreToggle.textContent = open ? 'Hide extra projects' : 'Show more projects';
+    morePanel.hidden = !open;
+    if (!open) closeProjectPreviews();
+
+    refreshGridAlignment();
+  };
+
+  moreToggle?.addEventListener('click', () => {
+    setMoreProjectsOpen(moreToggle.getAttribute('aria-expanded') !== 'true');
+  });
+
+  filterChips.forEach(chip => {
+    chip.addEventListener('click', () => applyFilter(chip.dataset.filter || 'all'));
+  });
+
+  if (moreToggle && morePanel) setMoreProjectsOpen(false);
 
   // Lightbox
   const lightbox = document.getElementById('image-lightbox');
